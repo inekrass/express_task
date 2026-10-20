@@ -33,3 +33,12 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[deployment]
+deploymentTarget = "cloudrun"
+
+[deployment.run]
+args = ["sh", "-c", "/nix/store/s97a21afj6aw098a25gs3j7ias7wzanm-nodejs-22.22.0-wrapped/bin/node $file"]
+
+[deployment.run.env]
+file = "index.js"

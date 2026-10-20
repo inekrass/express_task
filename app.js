@@ -71,7 +71,7 @@ export default function createApp(express, bodyParser, createReadStream, crypto,
   app.get('/req/', requestResource);
   app.post('/req/', requestResource);
 
-  app.all('/{*path}', (req, res) => {
+  app.all(/.*/, (req, res) => {
     res.send(login);
   });
 

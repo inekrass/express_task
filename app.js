@@ -5,7 +5,7 @@ export default function createApp(express, bodyParser, createReadStream, crypto,
   app.use((req, res, next) => {
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,OPTIONS,DELETE');
-    res.set('Access-Control-Allow-Headers', 'Content-Type');
+    res.set('Access-Control-Allow-Headers', 'Content-Type,ngrok-skip-browser-warning');
     res.type('text/plain');
 
     if (!req.path.endsWith('/')) {

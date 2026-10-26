@@ -83,8 +83,6 @@ export default function createApp(express, bodyParser, createReadStream, crypto,
 
     try {
       await connection.openUri(URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
         serverSelectionTimeoutMS: 5000,
         connectTimeoutMS: 5000,
         socketTimeoutMS: 10000,

@@ -10,8 +10,8 @@
     "node": ">=22"
   },
   "dependencies": {
-    "body-parser": "2.3.0",
+    "body-parser": "2.4.0",
     "express": "5.3.0",
-    "mongoose": "5.8.11"
+    "mongoose": "9.11.4"
   }
 }

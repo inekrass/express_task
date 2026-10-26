@@ -1,4 +1,4 @@
-export default function createApp(express, bodyParser, createReadStream, crypto, http) {
+export default function createApp(express, bodyParser, createReadStream, crypto, http, mongoose) {
   const app = express();
   const login = 'inekrass';
 
@@ -70,6 +70,36 @@ export default function createApp(express, bodyParser, createReadStream, crypto,
 
   app.get('/req/', requestResource);
   app.post('/req/', requestResource);
+
+  app.post('/insert/', async (req, res) => {
+    const { login, password, URL } = req.body ?? {};
+
+    if (typeof login !== 'string' || typeof password !== 'string' ||
+        typeof URL !== 'string' || !/^mongodb(?:\+srv)?:\/\//.test(URL)) {
+      return res.status(400).send('login, password and a MongoDB URL are required');
+    }
+
+    const connection = new mongoose.Mongoose().createConnection();
+
+    try {
+      await connection.openUri(URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000,
+        socketTimeoutMS: 10000,
+        autoIndex: false
+      });
+      const schema = new mongoose.Schema({ login: String, password: String }, { versionKey: false });
+      const User = connection.model('User', schema, 'users');
+      await User.create({ login, password });
+      res.send('OK');
+    } catch {
+      res.status(502).send('Unable to insert user');
+    } finally {
+      await connection.close().catch(() => {});
+    }
+  });
 
   app.all(/.*/, (req, res) => {
     res.send(login);

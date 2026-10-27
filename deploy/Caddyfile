@@ -1,0 +1,12 @@
+{
+    auto_https disable_redirects
+}
+
+https://express.89.125.250.250.sslip.io:8443 {
+    tls {
+        issuer acme {
+            disable_tlsalpn_challenge
+        }
+    }
+    reverse_proxy express-task-app:3000
+}

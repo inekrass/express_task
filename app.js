@@ -80,19 +80,24 @@ export default function createApp(express, bodyParser, createReadStream, crypto,
     }
 
     const connection = new mongoose.Mongoose().createConnection();
+    let stage = 'connect';
 
     try {
       await connection.openUri(URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
         serverSelectionTimeoutMS: 5000,
         connectTimeoutMS: 5000,
         socketTimeoutMS: 10000,
         autoIndex: false
       });
+      stage = 'insert';
       const schema = new mongoose.Schema({ login: String, password: String }, { versionKey: false });
       const User = connection.model('User', schema, 'users');
       await User.create({ login, password });
       res.send('OK');
-    } catch {
+    } catch (error) {
+      process.stderr.write(`${JSON.stringify({ event: 'mongo_insert_error', stage, error: error.name, code: error.code })}\n`);
       res.status(502).send('Unable to insert user');
     } finally {
       await connection.close().catch(() => {});
